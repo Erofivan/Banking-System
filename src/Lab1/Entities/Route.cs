@@ -1,4 +1,5 @@
-﻿using Itmo.ObjectOrientedProgramming.Lab1.Segments;
+﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
+using Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities;
 
@@ -6,43 +7,33 @@ public sealed class Route
 {
     private readonly IReadOnlyCollection<IRouteSegment> _segments;
 
-    public Route(IReadOnlyCollection<IRouteSegment> segments, double endSpeedLimit)
+    public Route(IReadOnlyCollection<IRouteSegment> segments, SpeedLimit endSpeedLimit)
     {
-        ArgumentNullException.ThrowIfNull(segments, nameof(segments));
-
-        if (segments.Count == 0)
-            throw new ArgumentException("Route must have at least one segment", nameof(segments));
-
-        if (endSpeedLimit <= 0)
-            throw new ArgumentException("End speed limit must be positive", nameof(endSpeedLimit));
-
         _segments = segments;
         EndSpeedLimit = endSpeedLimit;
     }
 
-    public double EndSpeedLimit { get; }
+    public SpeedLimit EndSpeedLimit { get; }
 
     public TraversalResult Traverse(Train train)
     {
-        ArgumentNullException.ThrowIfNull(train, nameof(train));
-
         Train currentTrain = train;
-        double totalTime = 0;
+        var totalTime = new Time(0);
 
         foreach (IRouteSegment segment in _segments)
         {
             TraversalContext context = segment.Traverse(currentTrain);
 
-            if (!context.Result.IsSuccess)
-                return TraversalResult.Failure();
+            if (context.Result is not TraversalResult.Success success)
+                return context.Result;
 
-            totalTime += context.Result.Time;
+            totalTime += success.Time;
             currentTrain = context.Train;
         }
 
         if (currentTrain.Speed > EndSpeedLimit)
-            return TraversalResult.Failure();
+            return new TraversalResult.SpeedLimitExceeded();
 
-        return TraversalResult.Success(totalTime, currentTrain.Speed);
+        return new TraversalResult.Success(totalTime, currentTrain.Speed);
     }
 }

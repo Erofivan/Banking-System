@@ -1,91 +1,65 @@
-﻿namespace Itmo.ObjectOrientedProgramming.Lab1.Entities;
+﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
+
+namespace Itmo.ObjectOrientedProgramming.Lab1.Entities;
 
 public sealed class Train
 {
     private const double Epsilon = 1e-10;
 
-    public Train(double mass, double maxForce, double precision)
-    {
-        if (mass <= 0)
-            throw new ArgumentException("Mass must be positive", nameof(mass));
-
-        if (maxForce <= 0)
-            throw new ArgumentException("Max force must be positive", nameof(maxForce));
-
-        if (mass <= 0)
-            throw new ArgumentException("Precision must be positive", nameof(precision));
-
-        Mass = mass;
-        MaxForce = maxForce;
-        Precision = precision;
-        Speed = 0;
-        Acceleration = 0;
-    }
-
-    private Train(double mass, double maxForce, double precision, double speed, double acceleration)
+    public Train(Mass mass, Force maxForce, Precision precision)
     {
         Mass = mass;
         MaxForce = maxForce;
         Precision = precision;
-        Speed = speed;
-        Acceleration = acceleration;
+        Speed = new Speed(0);
+        Acceleration = new Acceleration(0);
     }
 
-    public double Mass { get; }
+    public Mass Mass { get; }
 
-    public double MaxForce { get; }
+    public Force MaxForce { get; }
 
-    public double Precision { get; }
+    public Precision Precision { get; }
 
-    public double Speed { get; }
+    public Speed Speed { get; private set; }
 
-    public double Acceleration { get; }
+    public Acceleration Acceleration { get; private set; }
 
-    public Train ApplyForce(double force)
+    public void ApplyForce(double force)
     {
-        if (Math.Abs(force) > MaxForce)
-            return this;
+        if (Math.Abs(force) > MaxForce.Value)
+            return;
 
         // Calculate new acceleration based on F = ma => a = F/m
-        double newAcceleration = force / Mass;
+        double newAcceleration = force / Mass.Value;
 
-        return new Train(Mass, MaxForce, Precision, Speed, newAcceleration);
+        Acceleration = new Acceleration(newAcceleration);
     }
 
-    public TraversalResult CalculateTraversalTime(double distance)
+    public TraversalResult CalculateTraversalTime(Distance distance)
     {
-        if (distance <= 0)
-            return TraversalResult.Failure();
-
-        double remainingDistance = distance;
-        double currentSpeed = Speed;
+        double remainingDistance = distance.Value;
+        double currentSpeed = Speed.Value;
         double totalTime = 0;
 
         while (remainingDistance > Epsilon)
         {
             // Calculate speed after this time step: v = v0 + a*t
-            double resultingSpeed = currentSpeed + (Acceleration * Precision);
+            double resultingSpeed = currentSpeed + (Acceleration.Value * Precision.Value);
 
             if (resultingSpeed < Epsilon)
-                return TraversalResult.Failure();
+                return new TraversalResult.NegativeSpeed();
 
             // Calculate distance traveled in this time step: d = v*t
-            double traveledDistance = resultingSpeed * Precision;
+            double traveledDistance = resultingSpeed * Precision.Value;
             remainingDistance -= traveledDistance;
             currentSpeed = resultingSpeed;
-            totalTime += Precision;
+            totalTime += Precision.Value;
         }
 
-        return TraversalResult.Success(totalTime, currentSpeed);
-    }
+        Speed = new Speed(currentSpeed);
+        Acceleration = new Acceleration(0);
 
-    public Train UpdateSpeed(double newSpeed)
-    {
-        return new Train(Mass, MaxForce, Precision, newSpeed, Acceleration);
-    }
-
-    public Train UpdateAcceleration(double newAcceleration)
-    {
-        return new Train(Mass, MaxForce, Precision, Speed, newAcceleration);
+        return new TraversalResult.Success(new Time(totalTime), new Speed(currentSpeed));
     }
 }

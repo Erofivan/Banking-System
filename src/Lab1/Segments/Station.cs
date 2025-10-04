@@ -1,43 +1,34 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities;
+using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
 public sealed class Station : IRouteSegment
 {
-    public Station(double speedLimit, double loadingFactor, double unloadingFactor)
+    public Station(SpeedLimit speedLimit, TimeFactor loadingFactor, TimeFactor unloadingFactor)
     {
-        if (speedLimit <= 0)
-            throw new ArgumentException("Speed limit must be positive", nameof(speedLimit));
-
-        if (loadingFactor < 0)
-            throw new ArgumentException("Loading factor cannot be negative", nameof(loadingFactor));
-
-        if (unloadingFactor < 0)
-            throw new ArgumentException("Unloading factor cannot be negative", nameof(unloadingFactor));
-
         SpeedLimit = speedLimit;
         LoadingFactor = loadingFactor;
         UnloadingFactor = unloadingFactor;
     }
 
-    public double SpeedLimit { get; }
+    public SpeedLimit SpeedLimit { get; }
 
-    public double LoadingFactor { get; }
+    public TimeFactor LoadingFactor { get; }
 
-    public double UnloadingFactor { get; }
+    public TimeFactor UnloadingFactor { get; }
 
     public TraversalContext Traverse(Train train)
     {
         if (train.Speed > SpeedLimit)
         {
-            return TraversalContext.Create(TraversalResult.Failure(), train);
+            return TraversalContext.Create(new TraversalResult.SpeedLimitExceeded(), train);
         }
 
-        double stationTime = LoadingFactor + UnloadingFactor;
-        double initialSpeed = train.Speed;
+        TimeFactor stationTime = LoadingFactor + UnloadingFactor;
 
-        Train updatedTrain = train.UpdateSpeed(initialSpeed).UpdateAcceleration(0);
-
-        return TraversalContext.Create(TraversalResult.Success(stationTime, initialSpeed), updatedTrain);
+        return TraversalContext.Create(
+            new TraversalResult.Success(new Time(stationTime.Value), train.Speed),
+            train);
     }
 }

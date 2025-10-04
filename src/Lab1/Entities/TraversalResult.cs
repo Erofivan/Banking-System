@@ -1,27 +1,18 @@
-﻿namespace Itmo.ObjectOrientedProgramming.Lab1.Entities;
+﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
 
-public sealed class TraversalResult
+namespace Itmo.ObjectOrientedProgramming.Lab1.Entities;
+
+public abstract record TraversalResult
 {
-    private TraversalResult(bool isSuccess, double time, double finalSpeed)
+    private TraversalResult()
     {
-        IsSuccess = isSuccess;
-        Time = time;
-        FinalSpeed = finalSpeed;
     }
 
-    public bool IsSuccess { get; }
+    public sealed record Success(Time Time, Speed FinalSpeed) : TraversalResult;
 
-    public double Time { get; }
+    public sealed record SpeedLimitExceeded : TraversalResult;
 
-    public double FinalSpeed { get; }
+    public sealed record InvalidTraversal : TraversalResult;
 
-    public static TraversalResult Success(double time, double finalSpeed)
-    {
-        return new TraversalResult(true, time, finalSpeed);
-    }
-
-    public static TraversalResult Failure()
-    {
-        return new TraversalResult(false, 0, 0);
-    }
+    public sealed record NegativeSpeed : TraversalResult;
 }
