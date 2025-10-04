@@ -7,27 +7,28 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Tests;
 
 public class RouteTraversalTests
 {
+    private const double TrainPrecision = 0.1;
+
     private static readonly Mass TrainMass = new Mass(1000);
     private static readonly Force TrainMaxForce = new Force(50000);
-    private static readonly Precision TrainPrecision = new Precision(0.1);
     private static readonly Distance PathDistance = new Distance(100);
-    private static readonly TimeFactor StationLoadingFactor = new TimeFactor(10);
-    private static readonly TimeFactor StationUnloadingFactor = new TimeFactor(10);
+    private static readonly Time StationLoadingFactor = new Time(10);
+    private static readonly Time StationUnloadingFactor = new Time(10);
 
     [Fact]
-    public void Scenario1_AccelerateToRouteSpeedLimitWithRegularPath_Success()
+    public void Scenario1_AccelerateToRouteSpeedWithRegularPath_Success()
     {
-        var routeSpeedLimit = new SpeedLimit(50);
+        var routeSpeed = new Speed(50);
         double targetSpeed = 48;
         double requiredForce = CalculateForceForSpeed(TrainMass.Value, targetSpeed, PathDistance.Value);
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(PathDistance, requiredForce),
+            new PoweredPath(PathDistance, new Force(requiredForce)),
             new RegularPath(PathDistance),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -38,19 +39,19 @@ public class RouteTraversalTests
     }
 
     [Fact]
-    public void Scenario2_AccelerateAboveRouteSpeedLimit_Failure()
+    public void Scenario2_AccelerateAboveRouteSpeed_Failure()
     {
-        var routeSpeedLimit = new SpeedLimit(30);
+        var routeSpeed = new Speed(30);
         double targetSpeed = 50;
         double requiredForce = CalculateForceForSpeed(TrainMass.Value, targetSpeed, PathDistance.Value);
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(PathDistance, requiredForce),
+            new PoweredPath(PathDistance, new Force(requiredForce)),
             new RegularPath(PathDistance),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -59,22 +60,22 @@ public class RouteTraversalTests
     }
 
     [Fact]
-    public void Scenario3_AccelerateToStationSpeedLimitWithStation_Success()
+    public void Scenario3_AccelerateToStationSpeedWithStation_Success()
     {
-        var routeSpeedLimit = new SpeedLimit(50);
-        var stationSpeedLimit = new SpeedLimit(30);
+        var routeSpeed = new Speed(50);
+        var stationSpeed = new Speed(30);
         double targetSpeed = 28;
         double requiredForce = CalculateForceForSpeed(TrainMass.Value, targetSpeed, PathDistance.Value);
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(PathDistance, requiredForce),
+            new PoweredPath(PathDistance, new Force(requiredForce)),
             new RegularPath(PathDistance),
-            new Station(stationSpeedLimit, StationLoadingFactor, StationUnloadingFactor),
+            new Station(stationSpeed, StationLoadingFactor, StationUnloadingFactor),
             new RegularPath(PathDistance),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -85,21 +86,21 @@ public class RouteTraversalTests
     }
 
     [Fact]
-    public void Scenario4_AccelerateAboveStationSpeedLimit_Failure()
+    public void Scenario4_AccelerateAboveStationSpeed_Failure()
     {
-        var routeSpeedLimit = new SpeedLimit(50);
-        var stationSpeedLimit = new SpeedLimit(30);
+        var routeSpeed = new Speed(50);
+        var stationSpeed = new Speed(30);
         double targetSpeed = 50;
         double requiredForce = CalculateForceForSpeed(TrainMass.Value, targetSpeed, PathDistance.Value);
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(PathDistance, requiredForce),
-            new Station(stationSpeedLimit, StationLoadingFactor, StationUnloadingFactor),
+            new PoweredPath(PathDistance, new Force(requiredForce)),
+            new Station(stationSpeed, StationLoadingFactor, StationUnloadingFactor),
             new RegularPath(PathDistance),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -110,20 +111,20 @@ public class RouteTraversalTests
     [Fact]
     public void Scenario5_AccelerateAboveRouteLimitButBelowStationLimit_Failure()
     {
-        var routeSpeedLimit = new SpeedLimit(30);
-        var stationSpeedLimit = new SpeedLimit(50);
+        var routeSpeed = new Speed(30);
+        var stationSpeed = new Speed(50);
         double targetSpeed = 40;
         double requiredForce = CalculateForceForSpeed(TrainMass.Value, targetSpeed, PathDistance.Value);
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(PathDistance, requiredForce),
+            new PoweredPath(PathDistance, new Force(requiredForce)),
             new RegularPath(PathDistance),
-            new Station(stationSpeedLimit, StationLoadingFactor, StationUnloadingFactor),
+            new Station(stationSpeed, StationLoadingFactor, StationUnloadingFactor),
             new RegularPath(PathDistance),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -134,8 +135,8 @@ public class RouteTraversalTests
     [Fact]
     public void Scenario6_AccelerateAndDecelerateToMeetLimits_Success()
     {
-        var routeSpeedLimit = new SpeedLimit(25);
-        var stationSpeedLimit = new SpeedLimit(40);
+        var routeSpeed = new Speed(25);
+        var stationSpeed = new Speed(40);
 
         double initialAccelForce = 6000;
         double decelerateToStationForce = -250;
@@ -144,17 +145,17 @@ public class RouteTraversalTests
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(PathDistance, initialAccelForce),
+            new PoweredPath(PathDistance, new Force(initialAccelForce)),
             new RegularPath(PathDistance),
-            new PoweredPath(new Distance(PathDistance.Value * 12), decelerateToStationForce),
-            new Station(stationSpeedLimit, StationLoadingFactor, StationUnloadingFactor),
+            new PoweredPath(new Distance(PathDistance.Value * 12), new Force(decelerateToStationForce)),
+            new Station(stationSpeed, StationLoadingFactor, StationUnloadingFactor),
             new RegularPath(PathDistance),
-            new PoweredPath(PathDistance, accelerateFromStationForce),
+            new PoweredPath(PathDistance, new Force(accelerateFromStationForce)),
             new RegularPath(PathDistance),
-            new PoweredPath(new Distance(PathDistance.Value * 1.75), finalDecelerateForce),
+            new PoweredPath(new Distance(PathDistance.Value * 1.75), new Force(finalDecelerateForce)),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -167,14 +168,14 @@ public class RouteTraversalTests
     [Fact]
     public void Scenario7_NoAccelerationOnRegularPath_Failure()
     {
-        var routeSpeedLimit = new SpeedLimit(50);
+        var routeSpeed = new Speed(50);
 
         var segments = new List<IRouteSegment>
         {
             new RegularPath(PathDistance),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);
@@ -185,17 +186,17 @@ public class RouteTraversalTests
     [Fact]
     public void Scenario8_AccelerateThenDecelerateToNegativeSpeed_Failure()
     {
-        var routeSpeedLimit = new SpeedLimit(50);
+        var routeSpeed = new Speed(50);
         double forceY = 5000;
         double distanceX = 50;
 
         var segments = new List<IRouteSegment>
         {
-            new PoweredPath(new Distance(distanceX), forceY),
-            new PoweredPath(new Distance(distanceX), -2 * forceY),
+            new PoweredPath(new Distance(distanceX), new Force(forceY)),
+            new PoweredPath(new Distance(distanceX), new Force(-2 * forceY)),
         };
 
-        var route = new Route(segments, routeSpeedLimit);
+        var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
         TraversalResult result = route.Traverse(train);

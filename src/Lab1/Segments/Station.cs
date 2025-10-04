@@ -5,30 +5,28 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
 public sealed class Station : IRouteSegment
 {
-    public Station(SpeedLimit speedLimit, TimeFactor loadingFactor, TimeFactor unloadingFactor)
+    public Station(Speed speedLimit, Time loadingFactor, Time unloadingFactor)
     {
         SpeedLimit = speedLimit;
         LoadingFactor = loadingFactor;
         UnloadingFactor = unloadingFactor;
     }
 
-    public SpeedLimit SpeedLimit { get; }
+    public Speed SpeedLimit { get; }
 
-    public TimeFactor LoadingFactor { get; }
+    public Time LoadingFactor { get; }
 
-    public TimeFactor UnloadingFactor { get; }
+    public Time UnloadingFactor { get; }
 
-    public TraversalContext Traverse(Train train)
+    public TraversalResult Traverse(Train train)
     {
         if (train.Speed > SpeedLimit)
         {
-            return TraversalContext.Create(new TraversalResult.SpeedLimitExceeded(), train);
+            return new TraversalResult.SpeedLimitExceeded();
         }
 
-        TimeFactor stationTime = LoadingFactor + UnloadingFactor;
+        Time stationTime = LoadingFactor + UnloadingFactor;
 
-        return TraversalContext.Create(
-            new TraversalResult.Success(new Time(stationTime.Value), train.Speed),
-            train);
+        return new TraversalResult.Success(stationTime, train.Speed);
     }
 }

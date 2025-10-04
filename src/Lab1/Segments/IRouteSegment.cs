@@ -4,5 +4,5 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
 public interface IRouteSegment
 {
-    TraversalContext Traverse(Train train);
+    TraversalResult Traverse(Train train);
 }

@@ -9,23 +9,11 @@ public readonly struct Time
 
     public double Value { get; }
 
-    public static Time operator +(Time left, Time right)
-    {
-        return new Time(left.Value + right.Value);
-    }
+    public static Time operator +(Time left, Time right) => new(left.Value + right.Value);
 
-    public static Time operator +(Time left, double right)
-    {
-        return new Time(left.Value + right);
-    }
+    public static Time operator +(Time left, double right) => new(left.Value + right);
 
-    public static bool operator >(Time left, double right)
-    {
-        return left.Value > right;
-    }
+    public static bool operator >(Time left, double right) => left.Value > right;
 
-    public static bool operator <(Time left, double right)
-    {
-        return left.Value < right;
-    }
+    public static bool operator <(Time left, double right) => left.Value < right;
 }

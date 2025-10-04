@@ -9,8 +9,5 @@ public readonly struct Acceleration
 
     public double Value { get; }
 
-    public static double operator *(Acceleration left, double right)
-    {
-        return left.Value * right;
-    }
+    public static Speed operator *(Acceleration left, double timeStep) => new Speed(left.Value * timeStep);
 }

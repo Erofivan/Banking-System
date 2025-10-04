@@ -10,43 +10,21 @@ public readonly struct Speed
 
     public double Value { get; }
 
-    public static Speed operator +(Speed left, double right)
-    {
-        return new Speed(left.Value + right);
-    }
+    public static Speed operator +(Speed left, double right) => new Speed(left.Value + right);
 
-    public static bool operator >(Speed left, SpeedLimit right)
-    {
-        return left.Value > right.Value;
-    }
+    public static Speed operator +(Speed left, Speed right) => new Speed(left.Value + right.Value);
 
-    public static bool operator <(Speed left, SpeedLimit right)
-    {
-        return left.Value < right.Value;
-    }
+    public static bool operator >(Speed left, Speed right) => left.Value > right.Value;
 
-    public static bool operator <(Speed left, double right)
-    {
-        return left.Value < right;
-    }
+    public static bool operator <(Speed left, Speed right) => left.Value < right.Value;
 
-    public static bool operator >(Speed left, double right)
-    {
-        return left.Value > right;
-    }
+    public static bool operator <(Speed left, double right) => left.Value < right;
 
-    public static bool operator <=(Speed left, SpeedLimit right)
-    {
-        return left.Value <= right.Value;
-    }
+    public static bool operator >(Speed left, double right) => left.Value > right;
 
-    public static bool operator >=(Speed left, SpeedLimit right)
-    {
-        return left.Value >= right.Value;
-    }
+    public static bool operator <=(Speed left, Speed right) => left.Value <= right.Value;
 
-    public static double operator *(Speed left, double right)
-    {
-        return left.Value * right;
-    }
+    public static bool operator >=(Speed left, Speed right) => left.Value >= right.Value;
+
+    public static double operator *(Speed left, double right) => left.Value * right;
 }

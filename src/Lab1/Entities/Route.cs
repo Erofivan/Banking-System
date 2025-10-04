@@ -7,33 +7,31 @@ public sealed class Route
 {
     private readonly IReadOnlyCollection<IRouteSegment> _segments;
 
-    public Route(IReadOnlyCollection<IRouteSegment> segments, SpeedLimit endSpeedLimit)
+    public Route(IReadOnlyCollection<IRouteSegment> segments, Speed endSpeedLimit)
     {
         _segments = segments;
         EndSpeedLimit = endSpeedLimit;
     }
 
-    public SpeedLimit EndSpeedLimit { get; }
+    public Speed EndSpeedLimit { get; }
 
     public TraversalResult Traverse(Train train)
     {
-        Train currentTrain = train;
         var totalTime = new Time(0);
 
         foreach (IRouteSegment segment in _segments)
         {
-            TraversalContext context = segment.Traverse(currentTrain);
+            TraversalResult result = segment.Traverse(train);
 
-            if (context.Result is not TraversalResult.Success success)
-                return context.Result;
+            if (result is not TraversalResult.Success success)
+                return result;
 
             totalTime += success.Time;
-            currentTrain = context.Train;
         }
 
-        if (currentTrain.Speed > EndSpeedLimit)
+        if (train.Speed > EndSpeedLimit)
             return new TraversalResult.SpeedLimitExceeded();
 
-        return new TraversalResult.Success(totalTime, currentTrain.Speed);
+        return new TraversalResult.Success(totalTime, train.Speed);
     }
 }

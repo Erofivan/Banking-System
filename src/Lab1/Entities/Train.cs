@@ -6,7 +6,7 @@ public sealed class Train
 {
     private const double Epsilon = 1e-10;
 
-    public Train(Mass mass, Force maxForce, Precision precision)
+    public Train(Mass mass, Force maxForce, double precision)
     {
         Mass = mass;
         MaxForce = maxForce;
@@ -19,47 +19,54 @@ public sealed class Train
 
     public Force MaxForce { get; }
 
-    public Precision Precision { get; }
+    public double Precision { get; }
 
     public Speed Speed { get; private set; }
 
     public Acceleration Acceleration { get; private set; }
 
-    public void ApplyForce(double force)
+    public void ApplyForce(Force force)
     {
-        if (Math.Abs(force) > MaxForce.Value)
+        if (Force.Abs(force) > MaxForce)
             return;
 
         // Calculate new acceleration based on F = ma => a = F/m
-        double newAcceleration = force / Mass.Value;
+        Acceleration = force / Mass;
+    }
 
-        Acceleration = new Acceleration(newAcceleration);
+    public void UpdateState(Speed speed, Acceleration acceleration)
+    {
+        Speed = speed;
+        Acceleration = acceleration;
     }
 
     public TraversalResult CalculateTraversalTime(Distance distance)
     {
-        double remainingDistance = distance.Value;
-        double currentSpeed = Speed.Value;
-        double totalTime = 0;
+        Speed currentSpeed = Speed;
+        var totalTime = new Time(0.0);
+        Distance remainingDistance = distance;
 
         while (remainingDistance > Epsilon)
         {
             // Calculate speed after this time step: v = v0 + a*t
-            double resultingSpeed = currentSpeed + (Acceleration.Value * Precision.Value);
+            Speed resultingSpeed = currentSpeed + (Acceleration * Precision);
 
             if (resultingSpeed < Epsilon)
                 return new TraversalResult.NegativeSpeed();
 
             // Calculate distance traveled in this time step: d = v*t
-            double traveledDistance = resultingSpeed * Precision.Value;
-            remainingDistance -= traveledDistance;
+            var distanceTraveled = new Distance(resultingSpeed * Precision);
+
+            if (remainingDistance <= distanceTraveled)
+            {
+                break;
+            }
+
+            remainingDistance -= distanceTraveled;
             currentSpeed = resultingSpeed;
-            totalTime += Precision.Value;
+            totalTime += Precision;
         }
 
-        Speed = new Speed(currentSpeed);
-        Acceleration = new Acceleration(0);
-
-        return new TraversalResult.Success(new Time(totalTime), new Speed(currentSpeed));
+        return new TraversalResult.Success(totalTime, currentSpeed);
     }
 }
