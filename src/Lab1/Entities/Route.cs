@@ -8,7 +8,7 @@ public sealed class Route
 
     public Route(IReadOnlyCollection<IRouteSegment> segments, double endSpeedLimit)
     {
-        ArgumentNullException.ThrowIfNull(segments);
+        ArgumentNullException.ThrowIfNull(segments,  nameof(segments));
 
         if (segments.Count == 0)
             throw new ArgumentException("Route must have at least one segment", nameof(segments));
@@ -24,7 +24,7 @@ public sealed class Route
 
     public TraversalResult Traverse(Train train)
     {
-        ArgumentNullException.ThrowIfNull(train);
+        ArgumentNullException.ThrowIfNull(train, nameof(train));
 
         Train currentTrain = train;
         double totalTime = 0;
