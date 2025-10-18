@@ -15,21 +15,13 @@ public sealed class PoweredPath : IRouteSegment
 
     public Force Force { get; }
 
-    public TraversalResult Traverse(Train train)
+    public TrainTraversalResult Traverse(Train train)
     {
-        train.ApplyForce(Force);
+        train.TryApplyForce(Force);
 
-        if (Force.Abs(Force) > train.MaxForce)
-        {
-            return new TraversalResult.InvalidTraversal();
-        }
+        TrainTraversalResult result = train.Traverse(Distance);
 
-        TraversalResult result = train.CalculateTraversalTime(Distance);
-
-        if (result is TraversalResult.Success success)
-        {
-            train.UpdateState(success.FinalSpeed, new Acceleration(0));
-        }
+        train.TryApplyForce(new Force(0));
 
         return result;
     }

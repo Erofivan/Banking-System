@@ -12,14 +12,9 @@ public sealed class RegularPath : IRouteSegment
 
     public Distance Distance { get; }
 
-    public TraversalResult Traverse(Train train)
+    public TrainTraversalResult Traverse(Train train)
     {
-        TraversalResult result = train.CalculateTraversalTime(Distance);
-
-        if (result is TraversalResult.Success success)
-        {
-            train.UpdateState(success.FinalSpeed, new Acceleration(0));
-        }
+        TrainTraversalResult result = train.Traverse(Distance);
 
         return result;
     }

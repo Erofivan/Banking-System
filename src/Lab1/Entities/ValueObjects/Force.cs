@@ -19,6 +19,4 @@ public readonly struct Force
     {
         return new Force(Math.Abs(force.Value));
     }
-
-    public static Acceleration operator /(Force force, Mass mass) => new Acceleration(force.Value / mass.Value);
 }

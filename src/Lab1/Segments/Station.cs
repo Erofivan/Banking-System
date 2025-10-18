@@ -18,15 +18,15 @@ public sealed class Station : IRouteSegment
 
     public Time UnloadingFactor { get; }
 
-    public TraversalResult Traverse(Train train)
+    public TrainTraversalResult Traverse(Train train)
     {
         if (train.Speed > SpeedLimit)
         {
-            return new TraversalResult.SpeedLimitExceeded();
+            return new TrainTraversalResult.SpeedLimitExceeded();
         }
 
         Time stationTime = LoadingFactor + UnloadingFactor;
 
-        return new TraversalResult.Success(stationTime, train.Speed);
+        return new TrainTraversalResult.Success(stationTime, train.Speed);
     }
 }

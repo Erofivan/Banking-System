@@ -25,22 +25,19 @@ public sealed class Train
 
     public Acceleration Acceleration { get; private set; }
 
-    public void ApplyForce(Force force)
+    public void TryApplyForce(Force force)
     {
         if (Force.Abs(force) > MaxForce)
             return;
 
         // Calculate new acceleration based on F = ma => a = F/m
-        Acceleration = force / Mass;
+        if (Acceleration.TryCreate(force, Mass))
+        {
+            Acceleration = Acceleration.Create(force, Mass);
+        }
     }
 
-    public void UpdateState(Speed speed, Acceleration acceleration)
-    {
-        Speed = speed;
-        Acceleration = acceleration;
-    }
-
-    public TraversalResult CalculateTraversalTime(Distance distance)
+    public TrainTraversalResult Traverse(Distance distance)
     {
         Speed currentSpeed = Speed;
         var totalTime = new Time(0.0);
@@ -49,13 +46,13 @@ public sealed class Train
         while (remainingDistance > Epsilon)
         {
             // Calculate speed after this time step: v = v0 + a*t
-            Speed resultingSpeed = currentSpeed + (Acceleration * Precision);
+            Speed resultingSpeed = currentSpeed + Speed.Create(Acceleration, Precision);
 
             if (resultingSpeed < Epsilon)
-                return new TraversalResult.NegativeSpeed();
+                return new TrainTraversalResult.NegativeSpeed();
 
             // Calculate distance traveled in this time step: d = v*t
-            var distanceTraveled = new Distance(resultingSpeed * Precision);
+            var distanceTraveled = Distance.Create(resultingSpeed, Precision);
 
             if (remainingDistance <= distanceTraveled)
             {
@@ -67,6 +64,8 @@ public sealed class Train
             totalTime += Precision;
         }
 
-        return new TraversalResult.Success(totalTime, currentSpeed);
+        Speed = currentSpeed;
+
+        return new TrainTraversalResult.Success(totalTime, currentSpeed);
     }
 }

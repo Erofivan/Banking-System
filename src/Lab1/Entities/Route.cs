@@ -15,23 +15,23 @@ public sealed class Route
 
     public Speed EndSpeedLimit { get; }
 
-    public TraversalResult Traverse(Train train)
+    public TrainTraversalResult Traverse(Train train)
     {
         var totalTime = new Time(0);
 
         foreach (IRouteSegment segment in _segments)
         {
-            TraversalResult result = segment.Traverse(train);
+            TrainTraversalResult result = segment.Traverse(train);
 
-            if (result is not TraversalResult.Success success)
+            if (result is not TrainTraversalResult.Success success)
                 return result;
 
             totalTime += success.Time;
         }
 
         if (train.Speed > EndSpeedLimit)
-            return new TraversalResult.SpeedLimitExceeded();
+            return new TrainTraversalResult.SpeedLimitExceeded();
 
-        return new TraversalResult.Success(totalTime, train.Speed);
+        return new TrainTraversalResult.Success(totalTime, train.Speed);
     }
 }

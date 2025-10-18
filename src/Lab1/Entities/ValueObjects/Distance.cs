@@ -39,4 +39,6 @@ public readonly struct Distance
     public static bool operator <=(Distance left, Distance right) => left.Value <= right.Value;
 
     public static bool operator >=(Distance left, Distance right) => left.Value >= right.Value;
+
+    public static Distance Create(Speed left, double timeStep) => new Distance(left.Value * timeStep);
 }

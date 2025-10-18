@@ -26,5 +26,5 @@ public readonly struct Speed
 
     public static bool operator >=(Speed left, Speed right) => left.Value >= right.Value;
 
-    public static double operator *(Speed left, double right) => left.Value * right;
+    public static Speed Create(Acceleration left, double timeStep) => new Speed(left.Value * timeStep);
 }
