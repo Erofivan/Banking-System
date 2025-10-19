@@ -1,12 +1,11 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
+using Itmo.ObjectOrientedProgramming.Lab1.ResultTypes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Entities;
 
 public sealed class Train
 {
-    private const double Epsilon = 1e-10;
-
-    public Train(Mass mass, Force maxForce, double precision)
+    public Train(Mass mass, Force maxForce, Time precision)
     {
         Mass = mass;
         MaxForce = maxForce;
@@ -19,36 +18,34 @@ public sealed class Train
 
     public Force MaxForce { get; }
 
-    public double Precision { get; }
+    public Time Precision { get; }
 
     public Speed Speed { get; private set; }
 
     public Acceleration Acceleration { get; private set; }
 
-    public void TryApplyForce(Force force)
+    public bool TryApplyForce(Force force)
     {
         if (Force.Abs(force) > MaxForce)
-            return;
+            return false;
 
         // Calculate new acceleration based on F = ma => a = F/m
-        if (Acceleration.TryCreate(force, Mass))
-        {
-            Acceleration = Acceleration.Create(force, Mass);
-        }
+        Acceleration = Acceleration.Create(force, Mass);
+
+        return true;
     }
 
     public TrainTraversalResult Traverse(Distance distance)
     {
-        Speed currentSpeed = Speed;
         var totalTime = new Time(0.0);
         Distance remainingDistance = distance;
 
-        while (remainingDistance > Epsilon)
+        while (remainingDistance > Distance.Epsilon())
         {
             // Calculate speed after this time step: v = v0 + a*t
-            Speed resultingSpeed = currentSpeed + Speed.Create(Acceleration, Precision);
+            Speed resultingSpeed = Speed + Speed.Create(Acceleration, Precision);
 
-            if (resultingSpeed < Epsilon)
+            if (resultingSpeed < Speed.Epsilon())
                 return new TrainTraversalResult.NegativeSpeed();
 
             // Calculate distance traveled in this time step: d = v*t
@@ -60,12 +57,10 @@ public sealed class Train
             }
 
             remainingDistance -= distanceTraveled;
-            currentSpeed = resultingSpeed;
+            Speed = resultingSpeed;
             totalTime += Precision;
         }
 
-        Speed = currentSpeed;
-
-        return new TrainTraversalResult.Success(totalTime, currentSpeed);
+        return new TrainTraversalResult.Success(totalTime, Speed);
     }
 }

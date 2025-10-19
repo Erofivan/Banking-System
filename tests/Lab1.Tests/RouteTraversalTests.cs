@@ -1,5 +1,6 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
+using Itmo.ObjectOrientedProgramming.Lab1.ResultTypes;
 using Itmo.ObjectOrientedProgramming.Lab1.Segments;
 using Xunit;
 
@@ -7,8 +8,7 @@ namespace Itmo.ObjectOrientedProgramming.Lab1.Tests;
 
 public class RouteTraversalTests
 {
-    private const double TrainPrecision = 0.1;
-
+    private static readonly Time TrainPrecision = new Time(0.1);
     private static readonly Mass TrainMass = new Mass(1000);
     private static readonly Force TrainMaxForce = new Force(50000);
     private static readonly Distance PathDistance = new Distance(100);
@@ -31,10 +31,10 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.Success>(result);
-        var success = (TrainTraversalResult.Success)result;
+        Assert.IsType<RouteTraversalResult.Success>(result);
+        var success = (RouteTraversalResult.Success)result;
         Assert.True(success.Time.Value > 0);
     }
 
@@ -54,9 +54,9 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.SpeedLimitExceeded>(result);
+        Assert.IsType<RouteTraversalResult.Failure>(result);
     }
 
     [Fact]
@@ -78,10 +78,10 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.Success>(result);
-        var success = (TrainTraversalResult.Success)result;
+        Assert.IsType<RouteTraversalResult.Success>(result);
+        var success = (RouteTraversalResult.Success)result;
         Assert.True(success.Time.Value > 0);
     }
 
@@ -103,9 +103,9 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.SpeedLimitExceeded>(result);
+        Assert.IsType<RouteTraversalResult.Failure>(result);
     }
 
     [Fact]
@@ -127,9 +127,9 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.SpeedLimitExceeded>(result);
+        Assert.IsType<RouteTraversalResult.Failure>(result);
     }
 
     [Fact]
@@ -158,10 +158,10 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.Success>(result);
-        var success = (TrainTraversalResult.Success)result;
+        Assert.IsType<RouteTraversalResult.Success>(result);
+        var success = (RouteTraversalResult.Success)result;
         Assert.True(success.Time.Value > 0);
     }
 
@@ -178,9 +178,9 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.NegativeSpeed>(result);
+        Assert.IsType<RouteTraversalResult.Failure>(result);
     }
 
     [Fact]
@@ -199,9 +199,9 @@ public class RouteTraversalTests
         var route = new Route(segments, routeSpeed);
         var train = new Train(TrainMass, TrainMaxForce, TrainPrecision);
 
-        TrainTraversalResult result = route.Traverse(train);
+        RouteTraversalResult result = route.Traverse(train);
 
-        Assert.IsType<TrainTraversalResult.NegativeSpeed>(result);
+        Assert.IsType<RouteTraversalResult.Failure>(result);
     }
 
     private static double CalculateForceForSpeed(double mass, double targetSpeed, double distance)

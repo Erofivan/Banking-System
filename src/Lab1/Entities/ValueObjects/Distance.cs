@@ -2,11 +2,11 @@
 
 public readonly struct Distance
 {
-    private const double Epsilon = 1e-10;
+    private const double EpsilonValue = 1e-10;
 
     public Distance(double value)
     {
-        if (value <= Epsilon)
+        if (value < EpsilonValue)
         {
             throw new ArgumentException("Distance must be positive", nameof(value));
         }
@@ -16,19 +16,9 @@ public readonly struct Distance
 
     public double Value { get; }
 
-    public static bool operator >(Distance left, double right) => left.Value > right;
-
-    public static bool operator <(Distance left, double right) => left.Value < right;
-
-    public static bool operator <=(Distance left, double right) => left.Value <= right;
-
-    public static bool operator >=(Distance left, double right) => left.Value >= right;
-
-    public static Distance operator -(Distance left, double right) => new Distance(left.Value - right);
-
     public static Distance operator -(Distance left, Distance right)
     {
-        if (left.Value - right.Value <= 0)
+        if (right > left)
         {
             throw new InvalidOperationException("Distance cannot be negative");
         }
@@ -36,9 +26,15 @@ public readonly struct Distance
         return new Distance(left.Value - right.Value);
     }
 
+    public static bool operator <(Distance left, Distance right) => left.Value < right.Value;
+
+    public static bool operator >(Distance left, Distance right) => left.Value > right.Value;
+
     public static bool operator <=(Distance left, Distance right) => left.Value <= right.Value;
 
     public static bool operator >=(Distance left, Distance right) => left.Value >= right.Value;
 
-    public static Distance Create(Speed left, double timeStep) => new Distance(left.Value * timeStep);
+    public static Distance Create(Speed speed, Time time) => new Distance(speed.Value * time.Value);
+
+    public static Distance Epsilon() => new Distance(EpsilonValue);
 }

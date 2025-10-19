@@ -1,5 +1,6 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
+using Itmo.ObjectOrientedProgramming.Lab1.ResultTypes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
@@ -18,15 +19,15 @@ public sealed class Station : IRouteSegment
 
     public Time UnloadingFactor { get; }
 
-    public TrainTraversalResult Traverse(Train train)
+    public SegmentTraversalResult Traverse(Train train)
     {
         if (train.Speed > SpeedLimit)
         {
-            return new TrainTraversalResult.SpeedLimitExceeded();
+            return new SegmentTraversalResult.SpeedLimitExceeded(this);
         }
 
         Time stationTime = LoadingFactor + UnloadingFactor;
 
-        return new TrainTraversalResult.Success(stationTime, train.Speed);
+        return new SegmentTraversalResult.Success(stationTime, train.Speed);
     }
 }

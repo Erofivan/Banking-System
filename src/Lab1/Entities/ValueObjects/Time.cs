@@ -10,10 +10,4 @@ public readonly struct Time
     public double Value { get; }
 
     public static Time operator +(Time left, Time right) => new(left.Value + right.Value);
-
-    public static Time operator +(Time left, double right) => new(left.Value + right);
-
-    public static bool operator >(Time left, double right) => left.Value > right;
-
-    public static bool operator <(Time left, double right) => left.Value < right;
 }

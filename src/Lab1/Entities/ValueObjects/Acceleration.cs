@@ -9,23 +9,5 @@ public readonly struct Acceleration
 
     public double Value { get; }
 
-    public static bool TryCreate(Force force, Mass mass)
-    {
-        if (mass.Value == 0)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    public static Acceleration Create(Force force, Mass mass)
-    {
-        if (mass.Value == 0)
-        {
-            throw new ArgumentException("Mass cannot be zero");
-        }
-
-        return new Acceleration(force.Value / mass.Value);
-    }
+    public static Acceleration Create(Force force, Mass mass) => new Acceleration(force.Value / mass.Value);
 }

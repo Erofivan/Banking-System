@@ -1,5 +1,6 @@
 ﻿using Itmo.ObjectOrientedProgramming.Lab1.Entities;
 using Itmo.ObjectOrientedProgramming.Lab1.Entities.ValueObjects;
+using Itmo.ObjectOrientedProgramming.Lab1.ResultTypes;
 
 namespace Itmo.ObjectOrientedProgramming.Lab1.Segments;
 
@@ -15,14 +16,22 @@ public sealed class PoweredPath : IRouteSegment
 
     public Force Force { get; }
 
-    public TrainTraversalResult Traverse(Train train)
+    public SegmentTraversalResult Traverse(Train train)
     {
-        train.TryApplyForce(Force);
+        if (train.TryApplyForce(Force) is false)
+        {
+            return new SegmentTraversalResult.Failure(this);
+        }
 
         TrainTraversalResult result = train.Traverse(Distance);
 
-        train.TryApplyForce(new Force(0));
+        if (result is TrainTraversalResult.Success success)
+        {
+            train.TryApplyForce(new Force(0));
 
-        return result;
+            return new SegmentTraversalResult.Success(success.Time, success.FinalSpeed);
+        }
+
+        return new SegmentTraversalResult.Failure(this);
     }
 }

@@ -2,11 +2,11 @@
 
 public readonly struct Mass
 {
-    private const double Epsilon = 1e-10;
+    private const double EpsilonValue = 1e-10;
 
     public Mass(double value)
     {
-        if (value <= Epsilon)
+        if (value <= EpsilonValue)
         {
             throw new ArgumentException("Mass must be positive", nameof(value));
         }
