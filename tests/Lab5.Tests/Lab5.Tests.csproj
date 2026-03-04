@@ -1,22 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <IsPackable>false</IsPackable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Itmo.ObjectOrientedProgramming.Lab5.Tests</RootNamespace>
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <RootNamespace>Itmo.ObjectOrientedProgramming.Lab5.Tests</RootNamespace>
-    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="coverlet.collector"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-        <PackageReference Include="xunit"/>
-        <PackageReference Include="xunit.runner.visualstudio"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\Lab5\Lab5.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lab5.Application.Abstractions\Lab5.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Lab5.Application.Contracts\Lab5.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Lab5.Application\Lab5.Application.csproj" />
+    <ProjectReference Include="..\..\src\Lab5.Domain\Lab5.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Lab5.Infrastructure.Persistence\Lab5.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\..\src\Lab5.Presentation.Http\Lab5.Presentation.Http.csproj" />
+    <ProjectReference Include="..\..\src\Lab5\Lab5.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -1,7 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <RootNamespace>Itmo.ObjectOrientedProgramming.Lab5</RootNamespace>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lab5.Application\Lab5.Application.csproj" />
+      <ProjectReference Include="..\Lab5.Infrastructure.Persistence\Lab5.Infrastructure.Persistence.csproj" />
+      <ProjectReference Include="..\Lab5.Presentation.Http\Lab5.Presentation.Http.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Swashbuckle.AspNetCore" />
+    </ItemGroup>
 
 </Project>
