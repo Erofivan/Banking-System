@@ -71,6 +71,8 @@ internal sealed class AccountOperationService : IAccountOperationService
 
         Amount newBalance = account.Deposit(depositAmount);
 
+        _persistenceContext.Accounts.Update(account);
+
         _persistenceContext.OperationRecords.Add(new OperationRecord(
             OperationRecordId.Default,
             account.Id,
@@ -100,6 +102,9 @@ internal sealed class AccountOperationService : IAccountOperationService
         switch (result)
         {
             case WithdrawalResult.Success success:
+                // Сохраняем обновленный аккаунт в репозитории
+                _persistenceContext.Accounts.Update(account);
+
                 _persistenceContext.OperationRecords.Add(new OperationRecord(
                     OperationRecordId.Default,
                     account.Id,

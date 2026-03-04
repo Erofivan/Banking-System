@@ -8,4 +8,6 @@ public interface IAccountRepository
     Account Add(Account account);
 
     IEnumerable<Account> Query(AccountQuery query);
+
+    Account Update(Account account);
 }

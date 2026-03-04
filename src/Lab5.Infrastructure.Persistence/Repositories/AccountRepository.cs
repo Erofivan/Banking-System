@@ -25,4 +25,14 @@ public sealed class AccountRepository : IAccountRepository
         return _values.Values
             .Where(x => query.Ids is [] || query.Ids.Contains(x.Id));
     }
+
+    public Account Update(Account account)
+    {
+        if (_values.ContainsKey(account.Id))
+        {
+            _values[account.Id] = account;
+        }
+
+        return account;
+    }
 }
