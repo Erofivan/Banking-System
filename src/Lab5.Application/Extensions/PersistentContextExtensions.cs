@@ -7,33 +7,24 @@ namespace Lab5.Application.Extensions;
 
 internal static class PersistentContextExtensions
 {
-    extension(IPersistenceContext context)
+    public static UserSession? FindUserSession(this IPersistenceContext context, SessionToken token)
     {
-        public UserSession? FindUserSession(SessionToken token)
-        {
-            return context.UserSessions
-                .Query(UserSessionQuery.Build(builder => builder.WithToken(token)))
-                .SingleOrDefault();
-        }
+        return context.UserSessions
+            .Query(UserSessionQuery.Build(builder => builder.WithToken(token)))
+            .SingleOrDefault();
     }
 
-    extension(IPersistenceContext context)
+    public static Account? FindAccount(this IPersistenceContext context, AccountId accountId)
     {
-        public Account? FindAccount(AccountId accountId)
-        {
-            return context.Accounts
-                .Query(AccountQuery.Build(builder => builder.WithId(accountId)))
-                .SingleOrDefault();
-        }
+        return context.Accounts
+            .Query(AccountQuery.Build(builder => builder.WithId(accountId)))
+            .SingleOrDefault();
     }
 
-    extension(IPersistenceContext context)
+    public static AdminSession? FindAdminSession(this IPersistenceContext context, SessionToken token)
     {
-        public AdminSession? FindAdminSession(SessionToken token)
-        {
-            return context.AdminSessions
-                .Query(AdminSessionQuery.Build(builder => builder.WithToken(token)))
-                .SingleOrDefault();
-        }
+        return context.AdminSessions
+            .Query(AdminSessionQuery.Build(builder => builder.WithToken(token)))
+            .SingleOrDefault();
     }
 }
