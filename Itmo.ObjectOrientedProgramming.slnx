@@ -4,37 +4,25 @@
     <File Path="Directory.Build.props" />
     <File Path=".gitignore" />
   </Folder>
-  <Folder Name="/src/">
-    <Project Path="src\Lab1\Lab1.csproj" />
-    <Project Path="src\Lab2\Lab2.csproj" />
-    <Project Path="src\Lab3\Lab3.csproj" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/BankingSystem/">
+    <Project Path="src\BankingSystem\BankingSystem.csproj" />
   </Folder>
-  <Folder Name="/src/lab-4/">
-    <Project Path="src\Lab4.Core\Lab4.Core.csproj" />
-    <Project Path="src\Lab4.Presentation\Lab4.Presentation.csproj" />
-  </Folder>
-  <Folder Name="/src/lab-5/">
-    <Project Path="src\Lab5\Lab5.csproj" />
-  </Folder>
-  <Folder Name="/src/lab-5/Application/">
+  <Folder Name="/src/BankingSystem/Application/">
     <Project Path="src/Lab5.Application.Abstractions/Lab5.Application.Abstractions.csproj" />
     <Project Path="src/Lab5.Application.Contracts/Lab5.Application.Contracts.csproj" />
     <Project Path="src/Lab5.Application/Lab5.Application.csproj" />
   </Folder>
-  <Folder Name="/src/lab-5/Domain/">
+  <Folder Name="/src/BankingSystem/Domain/">
     <Project Path="src/Lab5.Domain/Lab5.Domain.csproj" />
   </Folder>
-  <Folder Name="/src/lab-5/Infrastructure/">
+  <Folder Name="/src/BankingSystem/Infrastructure/">
     <Project Path="src/Lab5.Infrastructure.Persistence/Lab5.Infrastructure.Persistence.csproj" />
   </Folder>
-  <Folder Name="/src/lab-5/Presentation/">
+  <Folder Name="/src/BankingSystem/Presentation/">
     <Project Path="src/Lab5.Presentation.Http/Lab5.Presentation.Http.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests\Lab1.Tests\Lab1.Tests.csproj" />
-    <Project Path="tests\Lab2.Tests\Lab2.Tests.csproj" />
-    <Project Path="tests\Lab3.Tests\Lab3.Tests.csproj" />
-    <Project Path="tests\Lab4.Tests\Lab4.Tests.csproj" />
-    <Project Path="tests\Lab5.Tests\Lab5.Tests.csproj" />
+    <Project Path="tests\BankingSystem.Tests\BankingSystem.Tests.csproj" />
   </Folder>
 </Solution>

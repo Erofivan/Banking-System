@@ -20,7 +20,7 @@
     <ProjectReference Include="..\..\src\Lab5.Domain\Lab5.Domain.csproj" />
     <ProjectReference Include="..\..\src\Lab5.Infrastructure.Persistence\Lab5.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\..\src\Lab5.Presentation.Http\Lab5.Presentation.Http.csproj" />
-    <ProjectReference Include="..\..\src\Lab5\Lab5.csproj" />
+    <ProjectReference Include="..\..\src\BankingSystem\BankingSystem.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@
     <PropertyGroup>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Lab5</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
